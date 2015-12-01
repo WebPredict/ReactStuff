@@ -1,0 +1,67 @@
+.text {
+  font-size: 2rem;
+  line-height: 1.5;
+  color: #FF0000;
+}
+
+.spacer {
+   height: 19px;
+}
+
+.row {
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+.formcontrol {
+   width: 100%;
+}
+
+.search {
+   width: 98%;
+}
+
+.colmd5, .colmd2, .colmd1 {
+  position: relative;
+   float: left;
+  min-height: 1px;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.buttonholder {
+   position: relative;
+   float: left;
+}
+
+.colmd5 {
+  width: 41.66666667%;
+}
+.colmd2 {
+  width: 16.66666667%;
+}
+.colmd1 {
+  width: 10%;
+}
+
+.btn {
+  display: block;
+  width: 90%;
+  padding: 6px 12px;
+  margin: 5px;
+  font-weight: normal;
+  line-height: 1.42857143;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  -ms-touch-action: manipulation;
+      touch-action: manipulation;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background-image: none;
+  border: 1px solid transparent;
+}
+

@@ -1,85 +1,85 @@
-var React = require('react');
-var MultiSelect = require('./MultiSelect');
+import React, {Component, PropTypes} from 'react';
+import MultiSelect from './MultiSelect';
+import styles from '../css/app.css';
 
-var indexOf = function(arr, item) {
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i].label == item.label && arr[i].value == item.value) {
+class SearchBar extends Component {
+    render () {
+        return (
+                <input
+                    type="text"
+                    placeholder="Search..."
+					className={styles.search}
+                    value={this.props.filterText}
+                    ref="filterTextInput"
+                    onChange={(ev) => this.props.onUserInput(ev.target.value)}
+                />
+        );
+    }
+}
+
+export default class MultiSelectPicker extends Component {
+
+   constructor(props) {
+      super(props);
+
+      this.state = {
+         availableOptionsSelected: [],
+         pickedOptionsSelected: [],
+         availableOptions: this.props.availableOptions,
+         filterText: '',
+         rightFilterText: '',
+         pickedOptions: []
+      };
+
+      this._availableOptionsChanged = this._availableOptionsChanged.bind(this);
+      this._pickedOptionsChanged = this._pickedOptionsChanged.bind(this);
+      this._unassignButtonClicked = this._unassignButtonClicked.bind(this);
+      this._assignButtonClicked = this._assignButtonClicked.bind(this);
+      this.handleUserInput = this.handleUserInput.bind(this);
+      this.handleRightUserInput = this.handleRightUserInput.bind(this);
+      this.indexOf = this.indexOf.bind(this);
+      this.filter = this.filter.bind(this);
+    }
+
+   static propTypes = {
+     availableOptions: React.PropTypes.array.isRequired,
+     onChange: React.PropTypes.func
+   };
+
+	static defaultProps = {
+		filterText: '',
+		rightFilterText: '' 
+	};
+
+   indexOf (arr, item) {
+      for (let i = 0; i < arr.length; i++) {
+         if (arr[i].label == item.label && arr[i].value == item.value) {
             return i;
-        }
-    }
-    return -1;
-}
+         }
+      }
+      return -1;
+   }
 
-function makeLookup(arr, prop) {
-  var lkup = {}
-  for (var i = 0, l = arr.length; i < l ; i++) {
-    if (prop) {
-      lkup[arr[i][prop]] = true
-    }
-    else {
-      lkup[arr[i]] = true
-    }
-  }
-  return lkup
-}
-
-var filter = function(arr, item) {
-    var ret = {
+   filter(arr, item) {
+      let ret = {
         itemsToMove: [],
         options: []
-    };
-    for (var i = 0; i < arr.length; i++) {
-        if (indexOf(item,arr[i]) === -1) {
+      };
+      for (let i = 0; i < arr.length; i++) {
+        if (this.indexOf(item,arr[i]) === -1) {
             ret.options.push(arr[i]);
         }
         else {
             ret.itemsToMove.push(arr[i]);
         }
-    }
+      }
 
-    return ret;
-}
+      return ret;
+   }
 
-var SearchBar = React.createClass({
-    handleChange: function() {
-        this.props.onUserInput(
-            this.refs.filterTextInput.getDOMNode().value
-        );
-    },
-    render: function() {
-        return (
-                <input
-                    type="text"
-                    placeholder="Search..."
-					className="filter-form-control"
-                    value={this.props.filterText}
-                    ref="filterTextInput"
-                    onChange={this.handleChange}
-                />
-        );
-    }
-});
-
-var MultiSelectPicker = React.createClass({
-
-    getInitialState: function () {
-        var defaultFilter = '';
-        return {
-            availableOptionsSelected: [],
-            pickedOptionsSelected: [],
-            availableOptions: this.props.availableOptions,
-            filterText: defaultFilter,
-            pickedOptions: []
-        };
-    },
-
-	getDefaultProps: function () {
-		return { filterText: '' };
-	},
-
-    _availableOptionsChangeHandler: function(event) {
-        var selectedValues = [];
-        for(var i = 0; i < event.length; i++)
+    _availableOptionsChanged(event) {
+        let selectedValues = [];
+        for(let i = 0; i < event.length; i++)
         {
             if (event[i].selected)
             {
@@ -87,11 +87,11 @@ var MultiSelectPicker = React.createClass({
             }
         }
         this.setState({availableOptionsSelected: selectedValues});
-    },
+    }
 
-    _pickedOptionsChangedHandler: function(event) {
-        var selectedValues = [];
-        for(var i = 0; i < event.length; i++)
+    _pickedOptionsChanged(event) {
+        let selectedValues = [];
+        for(let i = 0; i < event.length; i++)
         {
             if (event[i].selected)
             {
@@ -100,11 +100,11 @@ var MultiSelectPicker = React.createClass({
 
         }
         this.setState({pickedOptionsSelected: selectedValues});
-    },
+    }
 
-    _leftButtonClickHandler: function(event) {
-        var ret = filter(this.state.pickedOptions, this.state.pickedOptionsSelected);
-        var availableOptions = this.state.availableOptions.concat(ret.itemsToMove);
+    _unassignButtonClicked(event) {
+        let ret = this.filter(this.state.pickedOptions, this.state.pickedOptionsSelected);
+        let availableOptions = this.state.availableOptions.concat(ret.itemsToMove);
         this.setState({
             pickedOptions: ret.options,
             availableOptions: availableOptions
@@ -115,11 +115,11 @@ var MultiSelectPicker = React.createClass({
                 pickedOptions: ret.options
             })
         }
-    },
+    }
 
-    _rightButtonClickHandler: function(event) {
-        var ret = filter(this.state.availableOptions, this.state.availableOptionsSelected);
-        var pickedOptions = this.state.pickedOptions.concat(ret.itemsToMove);
+    _assignButtonClicked(event) {
+        let ret = this.filter(this.state.availableOptions, this.state.availableOptionsSelected);
+        let pickedOptions = this.state.pickedOptions.concat(ret.itemsToMove);
         this.setState({
             pickedOptions: pickedOptions,
             availableOptions: ret.options
@@ -130,58 +130,41 @@ var MultiSelectPicker = React.createClass({
                 pickedOptions: pickedOptions
             })
         }
-    },
+    }
 
-	handleUserInput: function(filterText) {
-        this.setState({
-            filterText: filterText
-        });
-    },
+	handleUserInput(filterText) {
+        this.setState({ filterText: filterText });
+  }
 
-    render: function () {
+	handleRightUserInput(filterText) {
+        this.setState({ rightFilterText: filterText });
+  }
 
-		var rows = [];
-        this.props.availableOptions.forEach(function(availableOption) {
-            if (availableOption.label.indexOf(this.state.filterText) === -1) {
-                return;
-            }
-			
-            rows.push(availableOption);
-        }.bind(this));
+  render () {
+		  let rows = this.state.availableOptions.filter(o => o.label.indexOf(this.state.filterText) !== -1);
+      let pickedRows = this.state.pickedOptions.filter( o => o.label.indexOf(this.state.rightFilterText) !== -1);
 
-        return (
-        <div className="row">
-            <div className="small-5 columns">
-				<SearchBar
-                    filterText={this.state.filterText}
-                    onUserInput={this.handleUserInput}
-                />
-
-                <MultiSelect options={rows} onChange={this._availableOptionsChangeHandler} />
+      return (
+        <div className={styles.row}>
+            <div className={styles.colmd2}>
+				   <SearchBar filterText={this.state.filterText} onUserInput={this.handleUserInput} />
+                <MultiSelect options={rows} onChange={this._availableOptionsChanged} />
             </div>
-            <div className="small-2 columns">
-                <div className="text-center">
-                    <button onClick={this._rightButtonClickHandler} type="button" className="btn btn-default btn-block top-button">
-                        Assign
-                    </button>
-                </div>
-                <div className="text-center">
-                    <button onClick={this._leftButtonClickHandler} type="button" className="btn btn-default btn-block ">
-                        Un-assign
-                    </button>
-                </div>
+            <div className={styles.buttonholder}>
+               <button onClick={this._assignButtonClicked} type="button" className={styles.btn} >
+                    Assign
+                </button>
+                <button onClick={this._unassignButtonClicked} type="button" className={styles.btn} >
+                   Un-assign
+                </button>
             </div>
-            <div className="small-5 columns">
-                <MultiSelect options={this.state.pickedOptions} onChange={this._pickedOptionsChangedHandler} />
+            <div className={styles.colmd2}>
+				   <SearchBar filterText={this.state.rightFilterText} onUserInput={this.handleRightUserInput} />
+                <MultiSelect options={pickedRows} onChange={this._pickedOptionsChanged} />
             </div>
         </div>
         );
     }
-});
+}
 
-MultiSelectPicker.propTypes = {
-    availableOptions: React.PropTypes.array.isRequired,
-    onChange: React.PropTypes.func
-};
 
-module.exports = MultiSelectPicker;
