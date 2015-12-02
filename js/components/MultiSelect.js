@@ -22,7 +22,7 @@ export default class MultiSelect extends Component {
         },this);
 
         return (
-                <select ref="mSelect" className={styles.formcontrol} multiple="{true}">
+                <select ref="mSelect" className={styles.select} multiple="{true}">
                     {options}
                 </select>
         );

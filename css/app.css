@@ -1,32 +1,19 @@
-.text {
-  font-size: 2rem;
-  line-height: 1.5;
-  color: #FF0000;
-}
-
-.spacer {
-   height: 19px;
-}
-
-.row {
-  margin-right: -15px;
-  margin-left: -15px;
-}
-
-.formcontrol {
+.select {
    width: 100%;
+   height: 100px;
 }
 
 .search {
    width: 98%;
 }
 
-.colmd5, .colmd2, .colmd1 {
+.col {
   position: relative;
-   float: left;
+  float: left;
   min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-right: 5px;
+  padding-left: 5px;
+  width: 16.66666667%;
 }
 
 .buttonholder {
@@ -34,21 +21,10 @@
    float: left;
 }
 
-.colmd5 {
-  width: 41.66666667%;
-}
-.colmd2 {
-  width: 16.66666667%;
-}
-.colmd1 {
-  width: 10%;
-}
-
 .btn {
   display: block;
   width: 90%;
-  padding: 6px 12px;
-  margin: 5px;
+  margin: 2px;
   font-weight: normal;
   line-height: 1.42857143;
   text-align: center;

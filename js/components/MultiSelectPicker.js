@@ -27,14 +27,18 @@ export default class MultiSelectPicker extends Component {
 
       this._availableOptionsChanged = this._availableOptionsChanged.bind(this);
       this._pickedOptionsChanged = this._pickedOptionsChanged.bind(this);
-      this._unassignButtonClicked = this._unassignButtonClicked.bind(this);
-      this._assignButtonClicked = this._assignButtonClicked.bind(this);
+      this._unassign = this._unassign.bind(this);
+      this._assign = this._assign.bind(this);
+      this._assignAll = this._assignAll.bind(this);
+      this._unassignAll = this._unassignAll.bind(this);
       this.indexOf = this.indexOf.bind(this);
       this.filter = this.filter.bind(this);
     }
 
    static propTypes = {
      availableOptions: React.PropTypes.array.isRequired,
+     initiallyPicked: React.PropTypes.array,
+     pickedOptions: React.PropTypes.array.isRequired,
      onChange: React.PropTypes.func,
      leftSearch: React.PropTypes.string.isRequired, 
      rightSearch: React.PropTypes.string.isRequired 
@@ -91,7 +95,7 @@ export default class MultiSelectPicker extends Component {
         actions.rightSelectionChanged(selectedValues);
     }
 
-    _unassignButtonClicked(event, actions) {
+    _unassign(event, actions) {
         let ret = this.filter(this.props.pickedOptions, this.props.pickedOptionsSelected);
         let availableOptions = this.props.availableOptions.concat(ret.itemsToMove);
         actions.assign(availableOptions, ret.options);
@@ -103,10 +107,32 @@ export default class MultiSelectPicker extends Component {
         }
     }
 
-    _assignButtonClicked(event, actions) {
+    _unassignAll(event, actions) {
+        let availableOptions = this.props.availableOptions.concat(this.props.pickedOptions);
+        actions.assign(availableOptions, []);
+        if (this.props.onChange) {
+            this.props.onChange({
+                availableOptions: availableOptions,
+                pickedOptions: []
+            })
+        }
+    }
+
+    _assign(event, actions) {
         let ret = this.filter(this.props.availableOptions, this.props.availableOptionsSelected);
         let pickedOptions = this.props.pickedOptions.concat(ret.itemsToMove);
         actions.assign(ret.options, pickedOptions);
+        if (this.props.onChange) {
+            this.props.onChange({
+                availableOptions: ret.options,
+                pickedOptions: pickedOptions
+            })
+        }
+    }
+
+    _assignAll(event, actions) {
+        let pickedOptions = this.props.pickedOptions.concat(this.props.availableOptions);
+        actions.assign([], pickedOptions);
         if (this.props.onChange) {
             this.props.onChange({
                 availableOptions: ret.options,
@@ -123,19 +149,25 @@ export default class MultiSelectPicker extends Component {
 
       return (
         <div className={styles.row}>
-            <div className={styles.colmd2}>
+            <div className={styles.col}>
 				   <SearchBar filterText={leftSearch} onUserInput={(text) => actions.leftSearchChanged(text)} />
                 <MultiSelect options={rows} onChange={(evt) => this._availableOptionsChanged(evt, actions)} />
             </div>
             <div className={styles.buttonholder}>
-               <button onClick={(evt) => this._assignButtonClicked(evt, actions)} type="button" className={styles.btn} >
-                    Assign
+               <button onClick={(evt) => this._assign(evt, actions)} className={styles.btn} >
+                    &gt;
                 </button>
-                <button onClick={(evt) => this._unassignButtonClicked(evt, actions)} type="button" className={styles.btn} >
-                   Un-assign
+                <button onClick={(evt) => this._unassign(evt, actions)} className={styles.btn} >
+                   &lt;
+                </button>
+               <button onClick={(evt) => this._assignAll(evt, actions)} className={styles.btn} >
+                    &gt;&gt;&gt;
+                </button>
+                <button onClick={(evt) => this._unassignAll(evt, actions)} className={styles.btn} >
+                   &lt;&lt;&lt;
                 </button>
             </div>
-            <div className={styles.colmd2}>
+            <div className={styles.col}>
 				   <SearchBar filterText={rightSearch} onUserInput={(text) => actions.rightSearchChanged(text)} />
                 <MultiSelect options={pickedRows} onChange={(evt) => this._pickedOptionsChanged(evt, actions)} />
             </div>

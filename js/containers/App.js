@@ -9,25 +9,25 @@ const store = configureStore();
 
 const options = [
    {
-        label: 'test',
-        value: 'value',
+        label: 'Apple',
+        value: 'apple',
         checked: false
     },
     {
-        label: 'test1',
-        value: 'value1',
+        label: 'Orange',
+        value: 'orange',
         checked: false
     }
     ,
     {
-        label: 'test2',
-        value: 'value2',
+        label: 'Pear',
+        value: 'pear',
         checked: false
     }
     ,
     {
-        label: 'test3',
-        value: 'value3',
+        label: 'Banana',
+        value: 'banana',
         checked: false
     }
 ];
@@ -40,7 +40,7 @@ export default React.createClass({
         <Provider store={store}>
           <div>
             <h1>Testing out the multi-select</h1>
-            <MultiSelectPicker availableOptions={options} />
+            <MultiSelectPicker availableOptions={options} initiallyPicked={['Orange']} />
           </div>
         </Provider>
 

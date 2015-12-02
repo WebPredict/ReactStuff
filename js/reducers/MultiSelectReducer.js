@@ -1,26 +1,15 @@
 import * as ActionTypes from '../constants/ActionTypes';
 
 let defaultState = {
-  availableOptions: [
+  otherOptions: [
    {
         label: 'test',
         value: 'value',
         checked: false
     },
-    {
+    {  
         label: 'test1',
         value: 'value1',
-        checked: false
-    },
-    {
-        label: 'test2',
-        value: 'value2',
-        checked: false
-    }
-    ,
-    {
-        label: 'test3',
-        value: 'value3',
         checked: false
     }
   ],
